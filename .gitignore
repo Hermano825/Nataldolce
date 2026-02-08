@@ -48,7 +48,6 @@ local.conf
 upload do hostinger/
 
 # Pastas antigas (mantidas localmente, nao versionar)
-assets/
 api/
 
 # Arquivos gerados

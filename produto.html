@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Produto - Dolce Divino</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="./assets/images/logo.png">
+
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1903050763983703');
+    fbq('track', 'PageView');
+    </script>
+    <!-- End Meta Pixel Code -->
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Ícones Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- CSS Personalizado -->
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body class="font-sans text-gray-800 bg-stone-50">
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1903050763983703&ev=PageView&noscript=1"
+    /></noscript>
+
+    <!-- NAV BAR -->
+    <nav class="fixed w-full z-50 bg-gradient-to-r from-amber-50 via-white to-amber-50 shadow-2xl backdrop-blur-sm border-b-2 border-amber-200">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="./assets/images/logo.png" alt="Dolce Divino" class="h-16 md:h-20 w-auto" onerror="this.src='IMG_5079.PNG'">
+            </a>
+            
+            <div class="hidden md:flex gap-6 font-medium text-amber-900">
+                <a href="index.html#home" class="hover:text-amber-700 transition font-semibold">Início</a>
+                <a href="index.html#produtos" class="hover:text-amber-700 transition font-semibold">Cardápio</a>
+                <a href="index.html#sobre" class="hover:text-amber-700 transition font-semibold">Sobre</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="relative cursor-pointer hover:scale-110 transition p-2 min-w-[44px] min-h-[44px] flex items-center justify-center" onclick="toggleCartModal()">
+                    <i data-lucide="shopping-bag" class="text-amber-800" width="24" height="24"></i>
+                    <span id="cart-badge" class="absolute -top-2 -right-2 bg-amber-800 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center opacity-0 transition-opacity duration-300">
+                        0
+                    </span>
+                </div>
+                <button class="md:hidden p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-amber-100 rounded-lg transition text-amber-900" onclick="toggleMenu()">
+                    <i data-lucide="menu" width="24" height="24"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Mobile -->
+        <div id="mobile-menu" class="hidden md:hidden bg-amber-50 p-4 absolute w-full shadow-xl border-b-2 border-amber-200">
+            <div class="flex flex-col gap-4 text-center text-amber-900 font-semibold">
+                <a href="index.html#home" onclick="toggleMenu()" class="py-2 border-b border-amber-200 hover:text-amber-700">Início</a>
+                <a href="index.html#produtos" onclick="toggleMenu()" class="py-2 border-b border-amber-200 hover:text-amber-700">Produtos</a>
+                <a href="index.html#sobre" onclick="toggleMenu()" class="py-2 hover:text-amber-700">Sobre</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- MODAL DO CARRINHO (igual ao da home) -->
+    <div id="cart-modal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleCartModal()"></div>
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col overflow-hidden transform transition-transform duration-300 translate-x-full" id="cart-panel">
+            <div class="p-4 bg-gradient-to-r from-amber-800 to-amber-700 text-white shadow-md sticky top-0 z-10">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold flex items-center gap-2">
+                        <i data-lucide="shopping-cart"></i> Seu Pedido
+                    </h2>
+                    <button onclick="toggleCartModal()" class="hover:text-amber-200 transition"><i data-lucide="x"></i></button>
+                </div>
+                <!-- Abas do carrinho -->
+                <div class="mt-3 flex gap-2">
+                    <button id="tab-carrinho" onclick="switchCartTab('carrinho')" class="px-3 py-2 rounded-md bg-white/15 text-white font-semibold border border-white/20">Carrinho</button>
+                    <button id="tab-dados" onclick="switchCartTab('dados')" class="px-3 py-2 rounded-md bg-white/5 hover:bg-white/10 text-white font-semibold border border-white/10">Informações da Entrega</button>
+                </div>
+            </div>
+            <!-- Seção Carrinho (Itens) -->
+            <div id="cart-section-carrinho" class="flex-1 overflow-y-auto p-4 cart-scroll space-y-4">
+                <div id="cart-items" class="space-y-4">
+                    <!-- Itens serão inseridos aqui via JS -->
+                    <div class="text-center text-gray-500 mt-10">Seu carrinho está vazio 🎄</div>
+                </div>
+                <div class="p-4 border-t mt-4">
+                    <div class="flex justify-between items-center text-lg font-bold text-gray-800">
+                        <span>Total:</span>
+                        <span id="cart-total" class="text-amber-800">R$ 0,00</span>
+                    </div>
+                    <div class="mt-4">
+                        <button onclick="switchCartTab('dados')" class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 min-h-[48px] rounded-lg shadow-xl hover:shadow-2xl transition-all flex justify-center items-center gap-2">
+                            Prosseguir com o Pedido <i data-lucide="arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção Dados (Checkout) -->
+            <div id="cart-section-dados" class="p-0 bg-gray-50 border-t border-gray-200 hidden grid grid-rows-[1fr_auto] flex-1 min-h-0 overflow-hidden">
+                <div id="checkout-form" class="space-y-3 p-6 overflow-y-auto min-h-0 overscroll-contain" style="-webkit-overflow-scrolling: touch;">
+                    <div>
+                        <input id="client-name" type="text" placeholder="Nome completo*" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                    </div>
+                    <div>
+                        <input id="client-cpf" type="text" placeholder="CPF*" maxlength="14" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                    </div>
+                    <div>
+                        <input id="client-phone" type="text" placeholder="Telefone*" maxlength="15" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <input id="client-cep" type="text" placeholder="CEP*" maxlength="9" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                        <input id="client-city" type="text" placeholder="Cidade" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <input id="client-bairro" type="text" placeholder="Bairro*" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                        <input id="client-rua" type="text" placeholder="Rua*" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                        <input id="client-numero" type="text" placeholder="Número*" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                        <input id="client-complemento" type="text" placeholder="Complemento (opcional)" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                    </div>
+                    <div>
+                        <textarea id="client-notes" rows="2" placeholder="Observações do pedido (alergias/instruções especiais)" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm"></textarea>
+                    </div>
+                    <p class="text-[11px] text-gray-500">Os dados são enviados apenas para agilizar o atendimento via WhatsApp.</p>
+                    <p id="checkout-error" class="hidden text-red-600 text-xs font-semibold"></p>
+                </div>
+                <div class="p-6 border-t bg-white">
+                    <div class="flex justify-between items-center mb-4 text-lg font-bold text-gray-800">
+                        <span>Total do Pedido:</span>
+                        <span id="cart-total-dados" class="text-amber-800">R$ 0,00</span>
+                    </div>
+                    <button onclick="finalizarCompra()" class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 min-h-[48px] rounded-lg shadow-xl hover:shadow-2xl transition-all flex justify-center items-center gap-2">
+                        Finalizar Compra <i data-lucide="check"></i>
+                    </button>
+                    <p class="text-xs text-center text-gray-500 mt-3 flex justify-center items-center gap-1">
+                        <i data-lucide="lock" size="12"></i> Pagamento 100% Seguro
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCT DETAIL -->
+    <section class="pt-32 pb-16 px-4 container mx-auto">
+        <!-- Breadcrumb -->
+        <div class="mb-8 flex items-center gap-2 text-sm text-gray-600">
+            <a href="index.html" class="hover:text-amber-700 transition">Início</a>
+            <i data-lucide="chevron-right" width="16"></i>
+            <a href="index.html#produtos" class="hover:text-amber-700 transition">Produtos</a>
+            <i data-lucide="chevron-right" width="16"></i>
+            <span class="text-amber-900 font-semibold" id="breadcrumb-name">Produto</span>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-12 mb-16">
+            <!-- Galeria de Imagens -->
+            <div>
+                <!-- Imagem Principal -->
+                <div class="bg-white rounded-2xl shadow-2xl overflow-hidden mb-4 border-2 border-amber-100">
+                    <img id="main-image" src="" alt="Produto" class="w-full h-96 md:h-[500px] object-cover cursor-zoom-in" onclick="openZoom()">
+                </div>
+                
+                <!-- Miniaturas -->
+                <div id="thumbnails" class="grid grid-cols-4 gap-3">
+                    <!-- Preenchido por JS -->
+                </div>
+            </div>
+
+            <!-- Informações do Produto -->
+            <div class="flex flex-col">
+                <div class="mb-2">
+                    <span id="product-category" class="inline-block bg-amber-100 text-amber-900 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+                        Categoria
+                    </span>
+                </div>
+                
+                <h1 id="product-name" class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">
+                    Nome do Produto
+                </h1>
+                
+                <!-- Variantes (tamanhos) -->
+                <div id="variant-selector" class="mb-6 hidden">
+                    <h3 class="text-sm font-bold text-gray-700 mb-3">Escolha o tamanho:</h3>
+                    <div id="variant-options" class="flex flex-wrap gap-2">
+                        <!-- Preenchido por JS -->
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <span class="text-4xl font-bold text-amber-900" id="product-price">R$ 0,00</span>
+                </div>
+                
+                <div class="mb-8 pb-8 border-b border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-3">Descrição</h3>
+                    <p id="product-description" class="text-gray-700 leading-relaxed text-lg">
+                        Descrição do produto
+                    </p>
+                </div>
+
+                <div class="mb-8 pb-8 border-b border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-3">Detalhes</h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check-circle" class="text-green-600 mt-1 shrink-0" width="20"></i>
+                            <span>Produto artesanal feito com ingredientes selecionados</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check-circle" class="text-green-600 mt-1 shrink-0" width="20"></i>
+                            <span>Embalagem especial para presente</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="truck" class="text-amber-700 mt-1 shrink-0" width="20"></i>
+                            <span>Entrega em toda a região</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Quantidade e Adicionar -->
+                <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                    <div class="flex items-center border-2 border-gray-300 rounded-lg overflow-hidden">
+                        <button onclick="decreaseQty()" class="px-4 py-3 bg-gray-100 hover:bg-gray-200 transition text-gray-700 font-bold">
+                            <i data-lucide="minus" width="20"></i>
+                        </button>
+                        <input type="number" id="quantity" value="1" min="1" class="w-20 text-center py-3 border-none outline-none font-bold text-lg" readonly>
+                        <button onclick="increaseQty()" class="px-4 py-3 bg-gray-100 hover:bg-gray-200 transition text-gray-700 font-bold">
+                            <i data-lucide="plus" width="20"></i>
+                        </button>
+                    </div>
+                    
+                    <button onclick="addToCartFromDetail()" class="flex-1 bg-gradient-to-r from-amber-700 to-amber-800 hover:from-amber-800 hover:to-amber-900 text-white font-bold py-4 px-8 rounded-lg shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                        <i data-lucide="shopping-cart" width="20"></i>
+                        Adicionar ao Carrinho
+                    </button>
+                </div>
+
+                <button onclick="window.location.href='index.html#produtos'" class="w-full border-2 border-amber-700 text-amber-700 hover:bg-amber-50 font-semibold py-3 px-8 rounded-lg transition flex items-center justify-center gap-2">
+                    <i data-lucide="arrow-left" width="20"></i>
+                    Continuar Comprando
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contato" class="bg-gradient-to-b from-amber-900 to-amber-950 text-amber-50 py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <div class="mb-4">
+                        <img src="./assets/images/logo.png" alt="Dolce Divino" class="h-20 w-auto" onerror="this.src='IMG_5079.PNG'">
+                    </div>
+                    <p class="text-sm">Transformando açúcar em afeto desde 2016.</p>
+                </div>
+                <div>
+                    <h4 class="text-amber-200 font-bold mb-4">Contato</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="phone" size="16"></i>
+                            <a href="https://wa.me/5585988884717" target="_blank" rel="noopener" class="hover:underline">(85) 98888-4717</a>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="instagram" size="16"></i>
+                            <a href="https://instagram.com/dolce.divino" target="_blank" rel="noopener" class="hover:underline">@dolce.divino</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-amber-200 font-bold mb-4">Dúvidas?</h4>
+                    <button onclick="window.open('https://wa.me/5585988884717', '_blank')" class="text-amber-300 hover:text-amber-200 underline">Fale conosco no WhatsApp</button>
+                </div>
+            </div>
+            <div class="border-t border-amber-800 pt-8 text-center text-sm">
+                <p>&copy; 2024 Dolce Divino.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script src="script.js"></script>
+    <script>
+        // Carrega produto da URL
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProduct();
+            // Atualiza contagem de carrinho na página de produto
+            updateCartUI();
+            lucide.createIcons();
+        });
+
+        function loadProduct() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = parseInt(urlParams.get('id'));
+            
+            if (!productId || !products) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const product = products.find(p => p.id === productId);
+            
+            if (!product) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Atualiza informações
+            document.getElementById('page-title').textContent = `${product.name} - Dolce Divino`;
+            document.getElementById('breadcrumb-name').textContent = product.name;
+            document.getElementById('product-name').textContent = product.name;
+            document.getElementById('product-category').textContent = product.category;
+            document.getElementById('product-price').textContent = `R$ ${product.price.toFixed(2)}`;
+            document.getElementById('product-description').textContent = product.description;
+            
+            // Renderiza variantes se existirem
+            if (product.variants && product.variants.length > 0) {
+                const variantSelector = document.getElementById('variant-selector');
+                const variantOptions = document.getElementById('variant-options');
+                variantSelector.classList.remove('hidden');
+                
+                variantOptions.innerHTML = product.variants.map((variant, idx) => `
+                    <button 
+                        onclick="selectVariant(${idx})" 
+                        data-variant-idx="${idx}"
+                        class="variant-btn px-4 py-2 border-2 rounded-lg font-semibold transition ${
+                            idx === 0 ? 'border-amber-700 bg-amber-50 text-amber-900' : 'border-gray-300 text-gray-700 hover:border-amber-600'
+                        }">
+                        ${variant.size}
+                    </button>
+                `).join('');
+                
+                // Define primeira variante como selecionada
+                window.selectedVariantIndex = 0;
+                document.getElementById('product-price').textContent = `R$ ${product.variants[0].price.toFixed(2)}`;
+            } else {
+                window.selectedVariantIndex = null;
+            }
+            
+            // Carrega imagens (podem variar por variante)
+            let images = product.images || [product.image];
+            const encodeImg = (path) => path.replace(/ /g, '%20');
+            document.getElementById('main-image').src = encodeImg(images[0]);
+            document.getElementById('main-image').alt = product.name;
+            
+            // Cria miniaturas
+            const thumbnailsContainer = document.getElementById('thumbnails');
+            thumbnailsContainer.innerHTML = images.map((img, idx) => `
+                <button onclick="changeMainImage('${encodeImg(img)}')" class="bg-white rounded-lg overflow-hidden border-2 border-transparent hover:border-amber-600 transition shadow-md hover:shadow-xl">
+                    <img src="${encodeImg(img)}" alt="${product.name} ${idx + 1}" class="w-full h-24 object-cover">
+                </button>
+            `).join('');
+
+            // Salva produto no localStorage
+            window.currentProduct = product;
+            window.currentImages = images;
+        }
+        
+        function selectVariant(index) {
+            const product = window.currentProduct;
+            if (!product || !product.variants) return;
+            
+            window.selectedVariantIndex = index;
+            const variant = product.variants[index];
+            
+            // Atualiza preço
+            document.getElementById('product-price').textContent = `R$ ${variant.price.toFixed(2)}`;
+            
+            // Se for Cupcake Natalino, alterna a galeria conforme a opção
+            if (product.name.toLowerCase().includes('cupcake natalino')) {
+                const encodeImg = (path) => path.replace(/ /g, '%20');
+                let images;
+                const thumbnailsContainer = document.getElementById('thumbnails');
+                if (variant.size.toLowerCase().includes('presentinho')) {
+                    images = [
+                        './assets/images/produtos/bolos/Cupcake Presentes1.png',
+                        './assets/images/produtos/bolos/Cupcake Presentes2.png'
+                    ];
+                } else {
+                    images = [
+                        './assets/images/produtos/bolos/Cupcake Feliz natal1.png',
+                        './assets/images/produtos/bolos/Cupcake Feliz natal2.png'
+                    ];
+                }
+                window.currentImages = images;
+                document.getElementById('main-image').src = encodeImg(images[0]);
+                thumbnailsContainer.innerHTML = images.map((img, idx) => `
+                    <button onclick="changeMainImage('${encodeImg(img)}')" class="bg-white rounded-lg overflow-hidden border-2 border-transparent hover:border-amber-600 transition shadow-md hover:shadow-xl">
+                        <img src="${encodeImg(img)}" alt="${product.name} ${idx + 1}" class="w-full h-24 object-cover">
+                    </button>
+                `).join('');
+            }
+            
+            // Atualiza visual dos botões
+            document.querySelectorAll('.variant-btn').forEach((btn, idx) => {
+                if (idx === index) {
+                    btn.className = 'variant-btn px-4 py-2 border-2 rounded-lg font-semibold transition border-amber-700 bg-amber-50 text-amber-900';
+                } else {
+                    btn.className = 'variant-btn px-4 py-2 border-2 rounded-lg font-semibold transition border-gray-300 text-gray-700 hover:border-amber-600';
+                }
+            });
+        }
+
+        function changeMainImage(src) {
+            document.getElementById('main-image').src = src;
+        }
+
+        // Zoom Modal simples
+        function openZoom() {
+            const src = document.getElementById('main-image').src;
+            const overlay = document.createElement('div');
+            overlay.className = 'fixed inset-0 bg-black/80 z-[70] flex items-center justify-center';
+            overlay.innerHTML = `
+                <div class="relative max-w-3xl w-full px-4">
+                    <button class="absolute -top-10 right-4 text-white" onclick="this.closest('.zoom-overlay').remove()"><i data-lucide='x' size='28'></i></button>
+                    <img src="${src}" class="w-full max-h-[80vh] object-contain rounded-lg shadow-2xl" />
+                </div>
+            `;
+            overlay.classList.add('zoom-overlay');
+            overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+            document.body.appendChild(overlay);
+            lucide.createIcons();
+        }
+
+        function increaseQty() {
+            const qtyInput = document.getElementById('quantity');
+            qtyInput.value = parseInt(qtyInput.value) + 1;
+        }
+
+        function decreaseQty() {
+            const qtyInput = document.getElementById('quantity');
+            if (parseInt(qtyInput.value) > 1) {
+                qtyInput.value = parseInt(qtyInput.value) - 1;
+            }
+        }
+
+        function addToCartFromDetail() {
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const product = window.currentProduct;
+            
+            if (!product) return;
+            
+            // Cria item do carrinho com variante (se houver)
+            let cartItem = { ...product };
+            
+            if (product.variants && window.selectedVariantIndex !== null) {
+                const variant = product.variants[window.selectedVariantIndex];
+                cartItem.selectedVariant = variant;
+                cartItem.price = variant.price;
+                cartItem.variantLabel = variant.size;
+            }
+            
+            // Cria chave de grupo
+            const groupKey = cartItem.variantLabel ? `${cartItem.id}-${cartItem.variantLabel}` : `${cartItem.id}`;
+            
+            // Adiciona ao carrinho múltiplas vezes
+            for (let i = 0; i < quantity; i++) {
+                cart.push({ ...cartItem });
+            }
+            
+            // Adiciona à ordem se for novo
+            if (!cartOrder.includes(groupKey)) {
+                cartOrder.push(groupKey);
+                saveCartOrder();
+            }
+            
+            saveCart();
+            updateCartUI();
+            // Abre o carrinho para confirmar ação
+            try { toggleCartModal(); } catch(_) {}
+            
+            // Feedback visual
+            const button = event.target.closest('button');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i data-lucide="check" width="20"></i> Adicionado!';
+            button.classList.add('btn-added');
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.classList.remove('btn-added');
+                lucide.createIcons();
+            }, 1500);
+        }
+
+        function toggleMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+    </script>
+    <script src="./assets/js/script.js"></script>
+</body>
+</html>

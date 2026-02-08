@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /assets/images/
+Disallow: /admin/
+Disallow: /*.php$
+
+Sitemap: https://www.dolcedivino.com.br/sitemap.xml

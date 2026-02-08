@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Administrativo - Dolce Divino</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Ícones Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        .metric-card {
+            transition: all 0.3s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-amber-700 to-amber-800 text-white shadow-xl sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="./assets/images/logo.png" alt="Dolce Divino" class="h-12 w-auto">
+                <div>
+                    <h1 class="text-2xl font-bold">Dashboard Administrativo</h1>
+                    <p class="text-amber-100 text-sm">Gestão de Pedidos e Clientes</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-sm hidden md:block">Última atualização: <span id="last-update">--:--</span></span>
+                <button onclick="refreshData()" class="bg-white/20 hover:bg-white/30 p-2 rounded-lg transition">
+                    <i data-lucide="refresh-cw" width="20"></i>
+                </button>
+                <a href="index.html" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition font-semibold text-sm">
+                    Ver Site
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Filtros -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <div class="flex flex-wrap gap-4 items-end">
+                <div class="flex-1 min-w-[200px]">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Período</label>
+                    <select id="filter-period" onchange="applyFilters()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none">
+                        <option value="today">Hoje</option>
+                        <option value="week" selected>Última Semana</option>
+                        <option value="month">Último Mês</option>
+                        <option value="all">Todos</option>
+                    </select>
+                </div>
+                <div class="flex-1 min-w-[200px]">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+                    <select id="filter-status" onchange="applyFilters()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none">
+                        <option value="all">Todos os Status</option>
+                        <option value="pending">Pendente</option>
+                        <option value="confirmed">Confirmado</option>
+                        <option value="delivered">Entregue</option>
+                        <option value="cancelled">Cancelado</option>
+                    </select>
+                </div>
+                <div class="flex-1 min-w-[200px]">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Buscar Cliente</label>
+                    <div class="relative">
+                        <input type="text" id="search-client" placeholder="Nome, CPF ou telefone..." onkeyup="applyFilters()" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:outline-none">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" width="18"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPIs - Cards de Métricas -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Total de Vendas -->
+            <div class="metric-card bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl shadow-xl p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="bg-white/20 p-3 rounded-lg">
+                        <i data-lucide="dollar-sign" width="28"></i>
+                    </div>
+                    <span class="text-green-100 text-sm font-semibold">+12.5%</span>
+                </div>
+                <h3 class="text-sm font-semibold opacity-90">Faturamento Total</h3>
+                <p class="text-3xl font-bold mt-2" id="total-revenue">R$ 0,00</p>
+            </div>
+
+            <!-- Total de Pedidos -->
+            <div class="metric-card bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-xl p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="bg-white/20 p-3 rounded-lg">
+                        <i data-lucide="shopping-cart" width="28"></i>
+                    </div>
+                    <span class="text-blue-100 text-sm font-semibold">+8.2%</span>
+                </div>
+                <h3 class="text-sm font-semibold opacity-90">Total de Pedidos</h3>
+                <p class="text-3xl font-bold mt-2" id="total-orders">0</p>
+            </div>
+
+            <!-- Ticket Médio -->
+            <div class="metric-card bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-xl shadow-xl p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="bg-white/20 p-3 rounded-lg">
+                        <i data-lucide="trending-up" width="28"></i>
+                    </div>
+                    <span class="text-purple-100 text-sm font-semibold">+5.1%</span>
+                </div>
+                <h3 class="text-sm font-semibold opacity-90">Ticket Médio</h3>
+                <p class="text-3xl font-bold mt-2" id="avg-ticket">R$ 0,00</p>
+            </div>
+
+            <!-- Clientes Únicos -->
+            <div class="metric-card bg-gradient-to-br from-amber-500 to-amber-600 text-white rounded-xl shadow-xl p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="bg-white/20 p-3 rounded-lg">
+                        <i data-lucide="users" width="28"></i>
+                    </div>
+                    <span class="text-amber-100 text-sm font-semibold">+15.3%</span>
+                </div>
+                <h3 class="text-sm font-semibold opacity-90">Clientes Únicos</h3>
+                <p class="text-3xl font-bold mt-2" id="unique-clients">0</p>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Gráfico de Vendas por Dia -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i data-lucide="bar-chart-3" class="text-amber-600"></i>
+                    Vendas por Dia
+                </h2>
+                <div style="height: 280px;">
+                    <canvas id="sales-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfico de Produtos Mais Vendidos -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i data-lucide="pie-chart" class="text-amber-600"></i>
+                    Produtos Mais Vendidos
+                </h2>
+                <div style="height: 280px;">
+                    <canvas id="products-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Pedidos Recentes -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <i data-lucide="list" class="text-amber-600"></i>
+                        Pedidos Recentes
+                    </h2>
+                    <button onclick="exportToCSV()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition flex items-center gap-2">
+                        <i data-lucide="download" width="18"></i>
+                        Exportar CSV
+                    </button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full" id="orders-table">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Cliente</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Contato</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Produtos</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Endereço</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Valor</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Data</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-tbody" class="divide-y divide-gray-200">
+                        <tr>
+                            <td colspan="9" class="px-6 py-8 text-center text-gray-500">
+                                <i data-lucide="inbox" class="mx-auto mb-2 text-gray-400" width="48"></i>
+                                <p>Carregando pedidos...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes do Pedido -->
+    <div id="order-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="sticky top-0 bg-gradient-to-r from-amber-700 to-amber-800 text-white p-6 rounded-t-2xl flex justify-between items-center">
+                <h3 class="text-2xl font-bold">Detalhes do Pedido</h3>
+                <button onclick="closeModal()" class="hover:bg-white/20 p-2 rounded-lg transition">
+                    <i data-lucide="x" width="24"></i>
+                </button>
+            </div>
+            <div id="modal-content" class="p-6">
+                <!-- Conteúdo será preenchido via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <!-- Fallback for local viewing: loads orders.js if fetch JSON is blocked -->
+    <script src="orders.js"></script>
+    <script>
+        // Dados reais gerados a partir dos dumps SQL; usados como fallback local
+        const inlineOrders = [
+            {
+                id: "PED001",
+                clientName: "Hermano Torres",
+                clientCPF: "079.431.583-69",
+                clientPhone: "",
+                products: [{ name: "Bolo Red Natal", qty: 1, price: 189.00 }],
+                address: "Rua Joaquim Nabuco 825, dietrich N°825, Meireles, Fortaleza/CE",
+                cep: "60125-120",
+                total: 189.00,
+                date: "2025-12-09 13:15:03",
+                status: "confirmed",
+                notes: ""
+            },
+            {
+                id: "PED002",
+                clientName: "Hermano Torres",
+                clientCPF: "079.431.583-69",
+                clientPhone: "",
+                products: [
+                    { name: "Bolo Sagrada Família", variant: "15 fatias", qty: 1, price: 229.00 },
+                    { name: "Bolo Sagrada Família", variant: "30 fatias", qty: 1, price: 339.00 },
+                    { name: "Bolo Red Natal", variant: "8 fatias", qty: 1, price: 189.00 }
+                ],
+                address: "Rua Joaquim Nabuco 825, dietrich N°825, Meireles, Fortaleza/CE",
+                cep: "60125-120",
+                total: 757.00,
+                date: "2025-12-10 10:45:20",
+                status: "confirmed",
+                notes: ""
+            },
+            {
+                id: "PED003",
+                clientName: "Luana Silva Sousa",
+                clientCPF: "626.061.983-95",
+                clientPhone: "",
+                products: [{ name: "Bolo Merengue de Natal", qty: 1, price: 169.00 }],
+                address: "Rua da Monguba, 103, Jardim das Oliveiras, Fortaleza/CE",
+                cep: "60820-150",
+                total: 169.00,
+                date: "2025-12-11 17:18:03",
+                status: "confirmed",
+                notes: ""
+            },
+            {
+                id: "PED004",
+                clientName: "Ricardo Viana Freire",
+                clientCPF: "495.699.533-49",
+                clientPhone: "",
+                products: [
+                    { name: "Bolo Boneco de Neve", qty: 1, price: 169.00 },
+                    { name: "Box Morangos Natalinos", qty: 2, price: 139.90 },
+                    { name: "Caixa de Chocolates Natalinos", qty: 2, price: 115.00 }
+                ],
+                address: "Rua Monsenhor Catão, 1450, Aldeota, Fortaleza/CE",
+                cep: "60175-000",
+                total: 678.80,
+                date: "2025-12-12 00:31:02",
+                status: "confirmed",
+                notes: ""
+            },
+            {
+                id: "PED005",
+                clientName: "mmic q s js s",
+                clientCPF: "522.462.380-48",
+                clientPhone: "",
+                products: [
+                    { name: "Bolo Red Natal", qty: 3, price: 189.00 },
+                    { name: "Bolo Merengue de Natal", qty: 1, price: 169.00 },
+                    { name: "Uvas Divinas", qty: 1, price: 49.90 }
+                ],
+                address: "rua 01, 02, centro, aquiraz",
+                cep: "60000-000",
+                total: 785.90,
+                date: "2025-12-12 14:30:54",
+                status: "confirmed",
+                notes: ""
+            },
+            {
+                id: "PED006",
+                clientName: "mmic q s js s",
+                clientCPF: "522.462.380-48",
+                clientPhone: "",
+                products: [
+                    { name: "Bolo Red Natal", qty: 3, price: 189.00 },
+                    { name: "Bolo Merengue de Natal", qty: 1, price: 169.00 },
+                    { name: "Uvas Divinas", qty: 1, price: 49.90 }
+                ],
+                address: "rua 01, 02, centro, aquiraz",
+                cep: "60000-000",
+                total: 785.90,
+                date: "2025-12-12 14:31:17",
+                status: "confirmed",
+                notes: ""
+            },
+            {
+                id: "PED007",
+                clientName: "mmic q s js s",
+                clientCPF: "522.462.380-48",
+                clientPhone: "",
+                products: [
+                    { name: "Bolo Red Natal", qty: 3, price: 189.00 },
+                    { name: "Bolo Merengue de Natal", qty: 1, price: 169.00 },
+                    { name: "Uvas Divinas", qty: 1, price: 49.90 }
+                ],
+                address: "rua 01, 02, centro, aquiraz",
+                cep: "60000-000",
+                total: 785.90,
+                date: "2025-12-12 15:32:50",
+                status: "confirmed",
+                notes: ""
+            },
+            {
+                id: "PED008",
+                clientName: "mmic q s js s",
+                clientCPF: "522.462.380-48",
+                clientPhone: "",
+                products: [
+                    { name: "Bolo Red Natal", qty: 3, price: 189.00 },
+                    { name: "Bolo Merengue de Natal", qty: 1, price: 169.00 },
+                    { name: "Uvas Divinas", qty: 1, price: 49.90 }
+                ],
+                address: "rua 01, 02, centro, aquiraz",
+                cep: "60000-000",
+                total: 785.90,
+                date: "2025-12-12 15:40:22",
+                status: "confirmed",
+                notes: ""
+            },
+            {
+                id: "PED009",
+                clientName: "Manuela Dantas",
+                clientCPF: "963.177.793-68",
+                clientPhone: "",
+                products: [{ name: "Bolo Red Natal", qty: 1, price: 189.00 }],
+                address: "Rua Justino Café Neto, 240, Guararapes, Fortaleza/CE",
+                cep: "60810-320",
+                total: 189.00,
+                date: "2025-12-17 01:33:12",
+                status: "confirmed",
+                notes: ""
+            },
+            {
+                id: "PED010",
+                clientName: "Aline da Silva Gouveia",
+                clientCPF: "000.328.993-19",
+                clientPhone: "",
+                products: Array(8).fill({ name: "Bem Casado na Bola de Acrílico", qty: 1, price: 14.90 }),
+                address: "Rua Padre Constantino, 19, Jacarecanga, Fortaleza/CE",
+                cep: "60310-400",
+                total: 119.20,
+                date: "2025-12-18 01:23:08",
+                status: "confirmed",
+                notes: ""
+            },
+            {
+                id: "PED011",
+                clientName: "Carmem Marfisa Ximenes Gomes Frota",
+                clientCPF: "815.846.363-00",
+                clientPhone: "",
+                products: Array(8).fill({ name: "Bem Casado na Bola de Acrílico", qty: 1, price: 14.90 }),
+                address: "Rua Leonardo Mota, 1515, Aldeota, Fortaleza/CE",
+                cep: "60170-041",
+                total: 104.30,
+                date: "2025-12-18 22:52:19",
+                status: "confirmed",
+                notes: ""
+            },
+            {
+                id: "PED012",
+                clientName: "Jayne Santiago",
+                clientCPF: "605.340.533-78",
+                clientPhone: "",
+                products: Array(14).fill({ name: "Monoporção Presentes de Natal", qty: 1, price: 39.00 }),
+                address: "Rua Doutor José Frota, 255, Mucuripe, Fortaleza/CE",
+                cep: "60165-210",
+                total: 507.00,
+                date: "2025-12-19 18:38:13",
+                status: "confirmed",
+                notes: ""
+            }
+        ];
+
+        let ordersData = inlineOrders;
+
+        let filteredOrders = [...ordersData];
+
+        async function loadOrders() {
+            try {
+                const res = await fetch('../src/data/orders.json', { cache: 'no-store' });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && Array.isArray(data.orders)) {
+                        ordersData = data.orders;
+                        normalizeOrders();
+                        filteredOrders = [...ordersData];
+                    }
+                }
+            } catch (e) {
+                console.warn('Falha ao carregar orders.json, usando dados de exemplo');
+            }
+        }
+
+        function normalizeOrders() {
+            ordersData = (ordersData || []).map(o => {
+                const products = Array.isArray(o.products) ? o.products : (o.products ? [o.products] : []);
+                const normProducts = products.map(p => ({
+                    name: p.name,
+                    qty: Number(p.qty || 1),
+                    price: (typeof p.price === 'number' && p.price >= 1000) ? (p.price / 100) : Number(p.price || 0),
+                    variant: p.variant || ''
+                }));
+                const totalRaw = Number(o.total || 0);
+                const normTotal = (totalRaw >= 1000) ? (totalRaw / 100) : totalRaw;
+                return {
+                    id: o.id,
+                    clientName: o.clientName,
+                    clientCPF: o.clientCPF,
+                    clientPhone: o.clientPhone || '',
+                    products: normProducts,
+                    address: o.address,
+                    cep: o.cep,
+                    total: normTotal,
+                    date: o.date,
+                    status: o.status || 'confirmed',
+                    notes: o.notes || ''
+                };
+            });
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', async function() {
+            lucide.createIcons();
+            await loadOrders();
+            if (!ordersData || ordersData.length === 0) {
+                try {
+                    // Fallback: carregar via script se existir window.ordersData
+                    if (window.ordersData && Array.isArray(window.ordersData)) {
+                        ordersData = window.ordersData;
+                        normalizeOrders();
+                        filteredOrders = [...ordersData];
+                    }
+                } catch {}
+            }
+            updateDashboard();
+            renderOrders();
+            initCharts();
+            updateCharts();
+            updateTime();
+            setInterval(updateTime, 60000);
+        });
+
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('last-update').textContent = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function updateDashboard() {
+            const totalRevenue = filteredOrders.reduce((sum, order) => sum + order.total, 0);
+            const totalOrders = filteredOrders.length;
+            const avgTicket = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+            const uniqueClients = new Set(filteredOrders.map(o => o.clientCPF)).size;
+
+            document.getElementById('total-revenue').textContent = totalRevenue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('total-orders').textContent = totalOrders;
+            document.getElementById('avg-ticket').textContent = avgTicket.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('unique-clients').textContent = uniqueClients;
+        }
+
+        function renderOrders() {
+            const tbody = document.getElementById('orders-tbody');
+            if (filteredOrders.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="px-6 py-8 text-center text-gray-500">
+                            <i data-lucide="inbox" class="mx-auto mb-2 text-gray-400" width="48"></i>
+                            <p>Nenhum pedido encontrado</p>
+                        </td>
+                    </tr>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            tbody.innerHTML = filteredOrders.map(order => {
+                const statusColors = {
+                    pending: 'bg-yellow-100 text-yellow-800',
+                    confirmed: 'bg-blue-100 text-blue-800',
+                    delivered: 'bg-green-100 text-green-800',
+                    cancelled: 'bg-red-100 text-red-800'
+                };
+                const statusLabels = {
+                    pending: 'Pendente',
+                    confirmed: 'Confirmado',
+                    delivered: 'Entregue',
+                    cancelled: 'Cancelado'
+                };
+                
+                const productsText = order.products.map(p => `${p.qty}x ${p.name}`).join(', ');
+                
+                return `
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">${order.id}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                            <div class="font-semibold">${order.clientName}</div>
+                            <div class="text-xs text-gray-500">${order.clientCPF}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${order.clientPhone}</td>
+                        <td class="px-6 py-4 text-sm text-gray-700 max-w-xs truncate" title="${productsText}">${productsText}</td>
+                        <td class="px-6 py-4 text-sm text-gray-700 max-w-xs truncate" title="${order.address}">${order.address}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">${order.total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${new Date(order.date).toLocaleDateString('pt-BR')}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColors[order.status]}">
+                                ${statusLabels[order.status]}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <button onclick="viewOrder('${order.id}')" class="text-amber-600 hover:text-amber-800 font-semibold">Ver Detalhes</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            lucide.createIcons();
+        }
+
+        function applyFilters() {
+            const period = document.getElementById('filter-period').value;
+            const status = document.getElementById('filter-status').value;
+            const search = document.getElementById('search-client').value.toLowerCase();
+
+            filteredOrders = ordersData.filter(order => {
+                // Filtro de período
+                const orderDate = new Date(order.date);
+                const today = new Date();
+                const daysDiff = Math.floor((today - orderDate) / (1000 * 60 * 60 * 24));
+                
+                let periodMatch = true;
+                if (period === 'today') periodMatch = daysDiff === 0;
+                else if (period === 'week') periodMatch = daysDiff <= 7;
+                else if (period === 'month') periodMatch = daysDiff <= 30;
+
+                // Filtro de status
+                const statusMatch = status === 'all' || order.status === status;
+
+                // Filtro de busca
+                const searchMatch = search === '' || 
+                    order.clientName.toLowerCase().includes(search) ||
+                    order.clientCPF.includes(search) ||
+                    order.clientPhone.includes(search);
+
+                return periodMatch && statusMatch && searchMatch;
+            });
+
+            updateDashboard();
+            renderOrders();
+            updateCharts();
+        }
+
+        function initCharts() {
+            // Gráfico de Vendas por Dia
+            const salesCtx = document.getElementById('sales-chart').getContext('2d');
+            window.salesChart = new Chart(salesCtx, {
+                type: 'line',
+                data: {
+                    labels: ['15 Dez', '16 Dez', '17 Dez', '18 Dez', '19 Dez', '20 Dez', '21 Dez'],
+                    datasets: [{
+                        label: 'Vendas (R$)',
+                        data: [1200, 1900, 1500, 2100, 1800, 2400, 2800],
+                        borderColor: 'rgb(180, 83, 9)',
+                        backgroundColor: 'rgba(180, 83, 9, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'R$ ' + context.parsed.y.toLocaleString('pt-BR');
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + value;
+                                },
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de Produtos Mais Vendidos
+            const productsCtx = document.getElementById('products-chart').getContext('2d');
+            window.productsChart = new Chart(productsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Panetone Pistache', 'Cesta Natalina', 'Box Morangos', 'Bolo Divino', 'Outros'],
+                    datasets: [{
+                        data: [35, 25, 20, 12, 8],
+                        backgroundColor: [
+                            'rgb(180, 83, 9)',
+                            'rgb(217, 119, 6)',
+                            'rgb(245, 158, 11)',
+                            'rgb(251, 191, 36)',
+                            'rgb(253, 224, 71)'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 15,
+                                font: {
+                                    size: 11
+                                },
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    return label + ': ' + value + '%';
+                                }
+                            }
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: 10,
+                            right: 10
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateCharts() {
+            // Atualiza gráfico de vendas por dia
+            if (window.salesChart) {
+                const byDay = {};
+                filteredOrders.forEach(o => {
+                    const d = new Date(o.date);
+                    const key = d.toLocaleDateString('pt-BR');
+                    byDay[key] = (byDay[key] || 0) + (o.total || 0);
+                });
+                const labels = Object.keys(byDay);
+                const data = labels.map(l => byDay[l]);
+                window.salesChart.data.labels = labels;
+                window.salesChart.data.datasets[0].data = data;
+                window.salesChart.update();
+            }
+
+            // Atualiza gráfico de produtos mais vendidos
+            if (window.productsChart) {
+                const counts = {};
+                filteredOrders.forEach(o => {
+                    (o.products || []).forEach(p => {
+                        counts[p.name] = (counts[p.name] || 0) + (p.qty || 1);
+                    });
+                });
+                const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+                const top = entries.slice(0,4);
+                const outrosTotal = entries.slice(4).reduce((s,[,v])=>s+v,0);
+                const labels = top.map(([k])=>k).concat('Outros');
+                const data = top.map(([,v])=>v).concat(outrosTotal);
+                window.productsChart.data.labels = labels;
+                window.productsChart.data.datasets[0].data = data;
+                window.productsChart.update();
+            }
+        }
+
+        function viewOrder(orderId) {
+            const order = ordersData.find(o => o.id === orderId);
+            if (!order) return;
+
+            const statusLabels = {
+                pending: 'Pendente',
+                confirmed: 'Confirmado',
+                delivered: 'Entregue',
+                cancelled: 'Cancelado'
+            };
+
+            const modalContent = `
+                <div class="space-y-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-600 font-semibold">ID do Pedido</p>
+                            <p class="text-lg font-bold text-gray-900">${order.id}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 font-semibold">Status</p>
+                            <p class="text-lg font-bold text-amber-700">${statusLabels[order.status]}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t pt-4">
+                        <h4 class="font-bold text-gray-800 mb-3">Informações do Cliente</h4>
+                        <div class="space-y-2">
+                            <p><span class="font-semibold">Nome:</span> ${order.clientName}</p>
+                            <p><span class="font-semibold">CPF:</span> ${order.clientCPF}</p>
+                            <p><span class="font-semibold">Telefone:</span> ${order.clientPhone}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t pt-4">
+                        <h4 class="font-bold text-gray-800 mb-3">Endereço de Entrega</h4>
+                        <p>${order.address}</p>
+                        <p class="text-sm text-gray-600 mt-1">CEP: ${order.cep}</p>
+                    </div>
+                    
+                    <div class="border-t pt-4">
+                        <h4 class="font-bold text-gray-800 mb-3">Produtos</h4>
+                        <div class="space-y-2">
+                            ${order.products.map(p => `
+                                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+                                    <span>${p.qty}x ${p.name}</span>
+                                    <span class="font-semibold">${(p.qty * p.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    ${order.notes ? `
+                        <div class="border-t pt-4">
+                            <h4 class="font-bold text-gray-800 mb-3">Observações</h4>
+                            <p class="text-gray-700 bg-amber-50 p-3 rounded-lg">${order.notes}</p>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="border-t pt-4">
+                        <div class="flex justify-between items-center text-xl font-bold">
+                            <span>Total do Pedido:</span>
+                            <span class="text-amber-700">${order.total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3 pt-4">
+                        <a href="https://wa.me/55${order.clientPhone.replace(/\D/g, '')}" target="_blank" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg text-center transition flex items-center justify-center gap-2">
+                            <i data-lucide="message-circle" width="20"></i>
+                            Contatar Cliente
+                        </a>
+                        <button onclick="printOrder('${order.id}')" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition flex items-center justify-center gap-2">
+                            <i data-lucide="printer" width="20"></i>
+                            Imprimir
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('modal-content').innerHTML = modalContent;
+            document.getElementById('order-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            document.getElementById('order-modal').classList.add('hidden');
+        }
+
+        function refreshData() {
+            // Simula atualização dos dados
+            applyFilters();
+            updateTime();
+        }
+
+        function exportToCSV() {
+            const csv = [
+                ['ID', 'Cliente', 'CPF', 'Telefone', 'Endereço', 'CEP', 'Total', 'Data', 'Status'],
+                ...filteredOrders.map(order => [
+                    order.id,
+                    order.clientName,
+                    order.clientCPF,
+                    order.clientPhone,
+                    order.address,
+                    order.cep,
+                    order.total.toFixed(2),
+                    order.date,
+                    order.status
+                ])
+            ].map(row => row.join(',')).join('\n');
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `pedidos_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }
+
+        function printOrder(orderId) {
+            window.print();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Natal na Dolce Divino | Bolos, Panetones e Doces Artesanais de Natal</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Celebre o Natal com as delícias artesanais da Dolce Divino. Panetones especiais, bolos decorados, lembrancinhas natalinas e cestas personalizadas. Entrega em toda região.">
+    <meta name="keywords" content="natal, panetone, bolos natal, doces natal, lembrancinhas natalinas, cestas natal, dolce divino, doces artesanais, confeitaria natal, presentes natal">
+    <meta name="author" content="Dolce Divino">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.dolcedivino.com.br">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.dolcedivino.com.br">
+    <meta property="og:title" content="Natal na Dolce Divino | Bolos, Panetones e Doces Artesanais">
+    <meta property="og:description" content="Celebre o Natal com as delícias artesanais da Dolce Divino. Panetones especiais, bolos decorados, lembrancinhas natalinas e cestas personalizadas.">
+    <meta property="og:image" content="./assets/images/logo.png">
+    <meta property="og:locale" content="pt_BR">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Natal na Dolce Divino | Bolos, Panetones e Doces Artesanais">
+    <meta name="twitter:description" content="Celebre o Natal com as delícias artesanais da Dolce Divino. Panetones especiais, bolos decorados, lembrancinhas natalinas e cestas personalizadas.">
+    <meta name="twitter:image" content="./assets/images/logo.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="./assets/images/logo.png">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#B45309">
+
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1903050763983703');
+    fbq('track', 'PageView');
+    </script>
+    <!-- End Meta Pixel Code -->
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Ícones Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- CSS Personalizado -->
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body class="font-sans text-gray-800 bg-stone-50">
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1903050763983703&ev=PageView&noscript=1"
+    /></noscript>
+
+    <!-- NAV BAR -->
+    <nav class="fixed w-full z-50 bg-gradient-to-r from-amber-50 via-white to-amber-50 shadow-2xl backdrop-blur-sm border-b-2 border-amber-200">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="./assets/images/logo.png" alt="Dolce Divino" class="h-16 md:h-20 w-auto" onerror="this.src='IMG_5079.PNG'">
+            </div>
+            
+            <div class="hidden md:flex gap-6 items-center">
+                <a href="#home" class="hover:text-amber-700 transition font-semibold text-amber-900">Início</a>
+                <a href="#produtos" class="hover:text-amber-700 transition font-semibold text-amber-900">Cardápio</a>
+                <a href="#sobre" class="hover:text-amber-700 transition font-semibold text-amber-900">Sobre</a>
+                
+                <!-- Campo de Busca Desktop -->
+                <div class="relative flex items-center">
+                    <input 
+                        type="text" 
+                        id="search-input-desktop" 
+                        placeholder="Buscar produtos..." 
+                        class="w-64 pl-10 pr-4 py-2 rounded-l-lg border-2 border-amber-200 focus:border-amber-600 focus:outline-none text-sm text-gray-700"
+                        onkeypress="if(event.key === 'Enter') executeSearch()"
+                    >
+                    <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-amber-600" width="18"></i>
+                    <button 
+                        onclick="executeSearch()" 
+                        class="bg-amber-700 hover:bg-amber-800 text-white px-4 py-2 rounded-r-lg font-semibold text-sm transition border-2 border-amber-700 hover:border-amber-800"
+                    >
+                        Pesquisar
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <!-- Ícone Carrinho (Abre o Modal) -->
+                <div class="relative cursor-pointer hover:scale-110 transition p-2 min-w-[44px] min-h-[44px] flex items-center justify-center" onclick="toggleCartModal()">
+                    <i data-lucide="shopping-bag" class="text-amber-800" width="24" height="24"></i>
+                    <span id="cart-badge" class="absolute -top-2 -right-2 bg-amber-800 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center opacity-0 transition-opacity duration-300">
+                        0
+                    </span>
+                </div>
+                <!-- Menu Mobile -->
+                <button class="md:hidden p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-amber-100 rounded-lg transition text-amber-900" onclick="toggleMenu()">
+                    <i data-lucide="menu" width="24" height="24"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Mobile -->
+        <div id="mobile-menu" class="hidden md:hidden bg-amber-50 p-4 absolute w-full shadow-xl border-b-2 border-amber-200">
+            <!-- Campo de Busca Mobile -->
+            <div class="mb-4">
+                <div class="relative flex items-center">
+                    <input 
+                        type="text" 
+                        id="search-input-mobile" 
+                        placeholder="Buscar produtos..." 
+                        class="w-full pl-10 pr-4 py-3 rounded-l-lg border-2 border-amber-200 focus:border-amber-600 focus:outline-none text-sm text-gray-700"
+                        onkeypress="if(event.key === 'Enter') executeSearch()"
+                    >
+                    <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-amber-600" width="18"></i>
+                    <button 
+                        onclick="executeSearch()" 
+                        class="bg-amber-700 hover:bg-amber-800 text-white px-5 py-3 rounded-r-lg font-semibold text-sm transition border-2 border-amber-700 hover:border-amber-800 whitespace-nowrap"
+                    >
+                        Pesquisar
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex flex-col gap-4 text-center text-amber-900 font-semibold">
+                <a href="#home" onclick="toggleMenu()" class="py-2 border-b border-amber-200 hover:text-amber-700">Início</a>
+                <a href="#produtos" onclick="toggleMenu()" class="py-2 border-b border-amber-200 hover:text-amber-700">Produtos</a>
+                <a href="#sobre" onclick="toggleMenu()" class="py-2 hover:text-amber-700">Sobre</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MODAL DO CARRINHO (Novo) -->
+    <div id="cart-modal" class="fixed inset-0 z-[60] hidden">
+        <!-- Fundo escuro -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleCartModal()"></div>
+        
+        <!-- Conteúdo do Carrinho -->
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col overflow-hidden transform transition-transform duration-300 translate-x-full" id="cart-panel">
+            <div class="p-4 bg-gradient-to-r from-amber-800 to-amber-700 text-white shadow-md sticky top-0 z-10">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold flex items-center gap-2">
+                        <i data-lucide="shopping-cart"></i> Seu Pedido
+                    </h2>
+                    <button onclick="toggleCartModal()" class="hover:text-amber-200 transition"><i data-lucide="x"></i></button>
+                </div>
+                <!-- Abas do carrinho -->
+                <div class="mt-3 flex gap-2">
+                    <button id="tab-carrinho" onclick="switchCartTab('carrinho')" class="px-3 py-2 rounded-md bg-white/15 text-white font-semibold border border-white/20">Carrinho</button>
+                    <button id="tab-dados" onclick="switchCartTab('dados')" class="px-3 py-2 rounded-md bg-white/5 hover:bg-white/10 text-white font-semibold border border-white/10">Informações da Entrega</button>
+                </div>
+            </div>
+            
+            <!-- Seção Carrinho (Itens) -->
+            <div id="cart-section-carrinho" class="flex-1 overflow-y-auto p-4 cart-scroll space-y-4">
+                <div id="cart-items" class="space-y-4">
+                    <!-- Itens serão inseridos aqui via JS -->
+                    <div class="text-center text-gray-500 mt-10">Seu carrinho está vazio 🎄</div>
+                </div>
+                <div class="p-4 border-t mt-4">
+                    <div class="flex justify-between items-center text-lg font-bold text-gray-800">
+                        <span>Total:</span>
+                        <span id="cart-total" class="text-amber-800">R$ 0,00</span>
+                    </div>
+                    <div class="mt-4">
+                        <button onclick="switchCartTab('dados')" class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 min-h-[48px] rounded-lg shadow-xl hover:shadow-2xl transition-all flex justify-center items-center gap-2">
+                            Prosseguir com o Pedido <i data-lucide="arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção Dados (Checkout) -->
+            <div id="cart-section-dados" class="p-0 bg-gray-50 border-t border-gray-200 hidden grid grid-rows-[1fr_auto] flex-1 min-h-0 overflow-hidden">
+                <div id="checkout-form" class="space-y-3 p-6 overflow-y-auto min-h-0 overscroll-contain" style="-webkit-overflow-scrolling: touch;">
+                    <div>
+                        <input id="client-name" type="text" placeholder="Nome completo*" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                    </div>
+                    <div>
+                        <input id="client-cpf" type="text" placeholder="CPF*" maxlength="14" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                    </div>
+                    <div>
+                        <input id="client-phone" type="text" placeholder="Telefone*" maxlength="15" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <input id="client-cep" type="text" placeholder="CEP*" maxlength="9" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                        <input id="client-city" type="text" placeholder="Cidade" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <input id="client-bairro" type="text" placeholder="Bairro*" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                        <input id="client-rua" type="text" placeholder="Rua*" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                        <input id="client-numero" type="text" placeholder="Número*" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                        <input id="client-complemento" type="text" placeholder="Complemento (opcional)" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" />
+                    </div>
+                    <div>
+                        <textarea id="client-notes" rows="2" placeholder="Observações do pedido (alergias/instruções especiais)" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm"></textarea>
+                    </div>
+                    <p class="text-[11px] text-gray-500">Os dados são enviados apenas para agilizar o atendimento via WhatsApp.</p>
+                    <p id="checkout-error" class="hidden text-red-600 text-xs font-semibold"></p>
+                </div>
+                <div class="p-6 border-t bg-white">
+                    <div class="flex justify-between items-center mb-4 text-lg font-bold text-gray-800">
+                        <span>Total do Pedido:</span>
+                        <span id="cart-total-dados" class="text-amber-800">R$ 0,00</span>
+                    </div>
+                    <button onclick="finalizarCompra()" class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 min-h-[48px] rounded-lg shadow-xl hover:shadow-2xl transition-all flex justify-center items-center gap-2">
+                        Finalizar Compra <i data-lucide="check"></i>
+                    </button>
+                    <p class="text-xs text-center text-gray-500 mt-3 flex justify-center items-center gap-1">
+                        <i data-lucide="lock" size="12"></i> Pagamento 100% Seguro
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="relative pt-20 pb-10 md:pt-28 md:pb-20 px-4 min-h-[600px] overflow-hidden">
+        <!-- Hero Background Images (inline para garantir carregamento) -->
+        <img src="./assets/images/banners/banner12.webp?v=3" alt="Banner Natal Dolce Divino - Panetones e Bolos Artesanais" class="absolute inset-0 w-full h-full object-cover -z-10" style="object-position: center;" loading="eager">
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/60"></div>
+        <div class="relative container mx-auto text-center text-white mt-8 md:mt-0">
+            <div class="mb-6 flex justify-center">
+                <img src="./assets/images/logo.png" alt="Dolce Divino" class="h-28 md:h-36 w-auto filter drop-shadow-2xl" onerror="this.src='IMG_5079.PNG'">
+            </div>
+            <h1 class="text-4xl md:text-5xl font-serif font-bold mb-3">Natal de Sabor Inesquecível - Dolce Divino</h1>
+            <p class="text-base md:text-lg text-stone-200 mb-6 max-w-xl mx-auto">
+                Panetones artesanais e sobremesas finas. Garanta sua encomenda!
+            </p>
+            
+            <a href="#produtos" class="inline-block bg-gradient-to-r from-amber-700 to-amber-800 hover:from-amber-800 hover:to-amber-900 text-white font-bold py-3 px-6 rounded-full transition transform hover:scale-105 shadow-2xl border-2 border-amber-400/50 hover:border-amber-400">
+                Ver Cardápio
+            </a>
+        </div>
+    </section>
+
+    <!-- PRODUTOS -->
+    <section id="produtos" class="py-12 px-4 container mx-auto">
+        <div class="text-center mb-8">
+            <h2 class="text-amber-900 font-serif text-2xl md:text-3xl font-bold mb-2">Nossas Delícias de Natal</h2>
+            <div class="h-1 w-20 bg-gradient-to-r from-amber-600 to-amber-700 mx-auto rounded-full"></div>
+            
+            <!-- Filtros por Categoria (compactos) -->
+            <div class="mt-5 flex flex-wrap gap-2 justify-center" id="category-filters">
+                <button class="filter-chip bg-amber-100 text-amber-900 px-3 py-1.5 text-sm rounded-full border border-amber-200 hover:bg-amber-200 transition" data-category="all">Todos</button>
+                <button class="filter-chip bg-amber-100 text-amber-900 px-3 py-1.5 text-sm rounded-full border border-amber-200 hover:bg-amber-200 transition" data-category="Bolos">Bolos</button>
+                <button class="filter-chip bg-amber-100 text-amber-900 px-3 py-1.5 text-sm rounded-full border border-amber-200 hover:bg-amber-200 transition" data-category="Panetones">Panetones</button>
+                <button class="filter-chip bg-amber-100 text-amber-900 px-3 py-1.5 text-sm rounded-full border border-amber-200 hover:bg-amber-200 transition" data-category="Cestas">Cestas</button>
+                <button class="filter-chip bg-amber-100 text-amber-900 px-3 py-1.5 text-sm rounded-full border border-amber-200 hover:bg-amber-200 transition" data-category="Lembrancinhas">Lembrancinhas</button>
+                <button class="filter-chip bg-amber-100 text-amber-900 px-3 py-1.5 text-sm rounded-full border border-amber-200 hover:bg-amber-200 transition" data-category="Divinos Congelados">Divinos</button>
+            </div>
+            
+            <!-- Indicador de Busca -->
+            <div id="search-info" class="hidden mt-4">
+                <div class="inline-flex items-center gap-2 bg-amber-50 text-amber-800 px-3 py-1.5 rounded-full text-sm border border-amber-200">
+                    <i data-lucide="search" width="14"></i>
+                    <span id="search-text" class="text-xs"></span>
+                    <button onclick="clearSearch()" class="ml-1 hover:text-amber-700 transition">
+                        <i data-lucide="x" width="14"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- JS vai preencher -->
+        </div>
+    </section>
+
+    <!-- SOBRE -->
+    <section id="sobre" class="py-16 px-4 bg-gradient-to-b from-amber-50 to-white">
+        <div class="container mx-auto">
+            <div class="text-center mb-12">
+                <h3 class="text-amber-900 font-serif text-2xl md:text-3xl font-bold mb-2">Sobre a Dolce Divino</h3>
+                <div class="h-1 w-20 bg-gradient-to-r from-amber-600 to-amber-700 mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <!-- Card 1 -->
+                <div class="relative group overflow-hidden rounded-2xl shadow-xl h-80 md:h-96">
+                    <img src="./assets/images/banners/banner12.webp" alt="Produtos artesanais Dolce Divino" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                        <h4 class="text-2xl font-bold mb-2">Tradição Artesanal</h4>
+                        <p class="text-sm text-stone-200">Receitas exclusivas desenvolvidas com ingredientes premium e muito carinho.</p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="relative group overflow-hidden rounded-2xl shadow-xl h-80 md:h-96">
+                    <img src="./assets/images/banners/banner2.png" alt="Ambiente Dolce Divino" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                        <h4 class="text-2xl font-bold mb-2">Feito com Amor</h4>
+                        <p class="text-sm text-stone-200">Cada produto é preparado à mão para tornar seu Natal inesquecível.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Texto sobre -->
+            <div class="max-w-3xl mx-auto text-center">
+                <p class="text-gray-700 leading-relaxed mb-4">
+                    Desde <strong>2016</strong>, a Dolce Divino transforma açúcar em afeto, criando sobremesas e panetones artesanais que encantam paladares e conquistam corações.
+                </p>
+                <p class="text-gray-700 leading-relaxed">
+                    Nossa missão é levar sabor, qualidade e um toque especial para as mesas mais importantes: as suas celebrações em família.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contato" class="bg-gradient-to-b from-amber-900 to-amber-950 text-amber-50 py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <div class="mb-4">
+                        <img src="./assets/images/logo.png" alt="Dolce Divino" class="h-20 w-auto" onerror="this.src='IMG_5079.PNG'">
+                    </div>
+                    <p class="text-sm">Transformando açúcar em afeto desde 2016.</p>
+                </div>
+                <div>
+                    <h4 class="text-amber-200 font-bold mb-4">Contato</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="phone" size="16"></i>
+                            <a href="https://wa.me/5585988884717" target="_blank" rel="noopener" class="hover:underline">(85) 98888-4717</a>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="instagram" size="16"></i>
+                            <a href="https://instagram.com/dolce.divino" target="_blank" rel="noopener" class="hover:underline">@dolce.divino</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-amber-200 font-bold mb-4">Dúvidas?</h4>
+                    <button onclick="window.open('https://wa.me/5585988884717', '_blank')" class="text-amber-300 hover:text-amber-200 underline">Fale conosco no WhatsApp</button>
+                </div>
+            </div>
+            <div class="border-t border-amber-800 pt-8 text-center text-sm">
+                <p>&copy; 2024 Dolce Divino.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botão Flutuante Mobile (Abre o Carrinho) -->
+    <button onclick="toggleCartModal()" id="mobile-float-btn" class="hidden fixed bottom-4 right-4 z-40 bg-gradient-to-br from-amber-700 to-amber-800 text-white p-4 min-w-[56px] min-h-[56px] rounded-full shadow-2xl border-2 border-amber-400 animate-bounce hover:scale-110 transition">
+        <div class="relative">
+            <i data-lucide="shopping-bag"></i>
+            <span id="mobile-cart-badge" class="absolute -top-3 -right-3 bg-amber-500 text-amber-950 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+        </div>
+    </button>
+
+    <!-- JSON-LD Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Bakery",
+        "name": "Dolce Divino",
+        "description": "Confeitaria artesanal especializada em doces de Natal, panetones, bolos decorados e lembrancinhas personalizadas",
+        "url": "https://www.dolcedivino.com.br",
+        "logo": "./assets/images/logo.png",
+        "image": "./assets/images/logo.png",
+        "priceRange": "$$",
+        "servesCuisine": "Confeitaria Brasileira",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "BR",
+            "addressLocality": "Brasil"
+        },
+        "openingHours": "Mo-Sa 08:00-18:00",
+        "hasMenu": {
+            "@type": "Menu",
+            "name": "Cardápio de Natal",
+            "description": "Produtos especiais para o Natal"
+        }
+    }
+    </script>
+
+    <!-- JavaScript Principal -->
+    <script src="script.js"></script>
+    <script>
+        // Inicializa comportamento dos filtros na home
+        document.addEventListener('DOMContentLoaded', () => {
+            const chips = document.querySelectorAll('.filter-chip');
+            chips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    // estado visual
+                    chips.forEach(c => c.classList.remove('ring-2', 'ring-amber-600', 'bg-amber-200'));
+                    chip.classList.add('ring-2', 'ring-amber-600', 'bg-amber-200');
+                    const cat = chip.getAttribute('data-category');
+                    filterByCategory(cat);
+                });
+            });
+            // Seleciona "Todos" por padrão
+            const all = document.querySelector('.filter-chip[data-category="all"]');
+            if (all) all.click();
+        });
+    </script>
+    <script src="./assets/js/script.js"></script>
+</body>
+</html>
