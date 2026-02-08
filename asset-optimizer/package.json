@@ -1,0 +1,18 @@
+{
+  "name": "@veloxia/asset-optimizer-agent",
+  "version": "1.0.0",
+  "description": "Autonomous agent for optimizing images (PNG/JPG → WebP)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "optimize": "node index.js"
+  },
+  "dependencies": {
+    "sharp": "^0.33.1",
+    "glob": "^10.3.10",
+    "chalk": "^4.1.2"
+  },
+  "keywords": ["veloxia", "agent", "image-optimization", "webp", "automation"],
+  "author": "Veloxia Platform",
+  "license": "MIT"
+}
