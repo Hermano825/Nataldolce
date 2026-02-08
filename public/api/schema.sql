@@ -1,0 +1,26 @@
+-- Crie as tabelas no MySQL
+CREATE TABLE leads (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(150) NOT NULL,
+  cpf VARCHAR(20) NOT NULL,
+  telefone VARCHAR(20) NOT NULL,
+  cep VARCHAR(20) NOT NULL,
+  cidade VARCHAR(120) NOT NULL,
+  bairro VARCHAR(120) NOT NULL,
+  rua VARCHAR(150) NOT NULL,
+  numero VARCHAR(20) NOT NULL,
+  complemento VARCHAR(120) DEFAULT NULL,
+  observacoes TEXT,
+  total DECIMAL(10,2) DEFAULT 0,
+  created_at DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE lead_items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  lead_id INT NOT NULL,
+  product_name VARCHAR(200) NOT NULL,
+  variant_label VARCHAR(120) DEFAULT NULL,
+  price DECIMAL(10,2) DEFAULT 0,
+  quantity INT DEFAULT 1,
+  CONSTRAINT fk_lead_items_lead FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -1,0 +1,56 @@
+# Arquivos de configuração sensível
+api/config.php
+public/api/config.php
+api/db.php
+.env
+.env.local
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDEs
+.vscode/
+.idea/
+*.code-workspace
+
+# Node/Dependencies (se usar futuramente)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Python (se usar futuramente)
+venv/
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+logs/
+
+# Dados temporários
+tmp/
+temp/
+cache/
+
+# Arquivos de backup
+*.bak
+*.backup
+
+# Variáveis de desenvolvimento local
+.dev
+local.conf
+
+# Pastas de upload local
+upload do hostinger/
+
+# Pastas antigas (mantidas localmente, nao versionar)
+assets/
+api/
+
+# Arquivos gerados
+public/api/orders.json
+src/data/orders.json

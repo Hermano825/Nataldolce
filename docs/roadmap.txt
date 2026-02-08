@@ -1,0 +1,30 @@
+Dolce Divino - Roadmap de Melhorias (2025-11-30)
+
+Aprovacao Iterativa: executar cada item em passes, somente prosseguir apos aprovacao.
+
+1) Checkout e Dados do Cliente
+- Mascara CPF dinamica + validacao completa (digitos verificadores)
+- Campo CEP com validacao e auto-completar (bairro/cidade via API de CEP)
+- Observacoes do pedido (alergias/instrucoes especiais)
+
+2) Carrinho
+- Quantidade por item (+/-) com total recalculado instantaneamente
+- Remocao com confirmacao suave (fade/slide)
+- Persistencia multi-dispositivo: gerar ID de sessao e link "Voltar ao meu carrinho"
+
+3) Catalogo e Navegacao
+- Agrupamento por secoes com ancoras: Panettones, Bolos, Cestas, Lembrancinhas
+- Mini indice horizontal fixo para navegar entre secoes
+
+4) Performance e UX
+- Lazy loading inteligente (IntersectionObserver)
+- Skeletons de carregamento
+
+5) SEO e Estrutura
+- JSON-LD de Product (preco e disponibilidade)
+- Estrutura de dados externa (products.json)
+
+Notas:
+- Manter compatibilidade com index.html e produto.html
+- Evitar espacos em nomes de arquivos (padronizar quando possivel)
+- Seguir LGPD (privacidade nos dados de checkout)
